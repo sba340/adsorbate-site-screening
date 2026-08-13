@@ -1,1 +1,27 @@
+# Real research structures / VASP I/O -- never commit these
+CONTCAR_*
+POSCAR
+POSCAR_*
+OUTCAR
+OSZICAR
+vasprun.xml
+WAVECAR
+CHGCAR
+CHG
+DOSCAR
+EIGENVAL
+PROCAR
+adsorption_sites/
+*.zip
+
+# Allow the synthetic example structures explicitly
+!examples/CONTCAR_Co_example
+!examples/CONTCAR_SH2_example
+
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.venv/
+*.egg-info/
 
