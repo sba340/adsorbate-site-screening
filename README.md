@@ -67,11 +67,8 @@ python src/generate_sites.py \
 ```
 
 ## Notebook
-`notebooks/Adsorbate_placement_on_slab.ipynb` is the original Colab
-notebook this workflow was developed in (uses `/content/` paths and
-`google.colab.files.download`). The `src/` scripts are the portable,
-cluster/local-friendly version of the same logic and are what this repo
-is meant to be used from going forward.
+`notebooks/Adsorbate_placement_on_slab.ipynb`: original Colab notebook this workflow was developed in (uses `/content/` paths and `google.colab.files.download`). The `src/` scripts are the portable version of the same logic.
+`notebooks/SAM_placement_on_Au111.ipynb`: placement of phosphonic acid (F5BzPA, FBzPA) and thiol (PFBT, FBzS) anchoring groups on Au(111). Enumerates binding modes, sites, tilts and H treatments and writes one VASP POSCAR for each. See `notebooks/README.md` for inputs, settings and output naming.
 
 ## Notes
 - Site-finding parameters (`--nn-cutoff`, `--hcp-thresh`, `--n-layers`,
