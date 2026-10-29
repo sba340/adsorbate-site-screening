@@ -70,6 +70,21 @@ python src/generate_sites.py \
 `notebooks/Adsorbate_placement_on_slab.ipynb`: original Colab notebook this workflow was developed in (uses `/content/` paths and `google.colab.files.download`). The `src/` scripts are the portable version of the same logic.
 `notebooks/SAM_placement_on_Au111.ipynb`: placement of phosphonic acid (F5BzPA, FBzPA) and thiol (PFBT, FBzS) anchoring groups on Au(111). Enumerates binding modes, sites, tilts and H treatments and writes one VASP POSCAR for each. See `notebooks/README.md` for inputs, settings and output naming.
 
+## Molecule placement on Au(111) and ITO
+
+Separate from the site-enumeration workflow above, `src/molecule_placement/` builds VASP POSCARs for larger molecules in explicit binding modes: phosphonic acids (F5BzPA, FBzPA) and thiols (PFBT, FBzS) on Au(111) and on a hydroxylated ITO(222) slab. `notebooks/ITO_Au.ipynb` is the Colab notebook containing all four workflows.
+
+| Script | System |
+|---|---|
+| `place_PA_on_Au111.py` | phosphonic acids on Au(111) |
+| `place_thiol_on_Au111.py` | thiols on Au(111) |
+| `place_PA_on_ITO.py` | phosphonic acids on ITO(222) |
+| `place_thiol_on_ITO.py` | thiols on ITO(222) |
+
+Phosphonic acid binding modes follow Paramonov et al., Chem. Mater. 2008, 20, 5131 (DOI 10.1021/cm8014622): (a) monodentate, (b) bidentate with a P-OH...O(ITO) hydrogen bond, (c) bidentate, (d) tridentate. On ITO, condensation with surface hydroxyls (P-OH + HO-M gives P-O-M + H2O) is built in, with up to two waters removed. The thiol-on-ITO condensation route is an extension of that model and is not taken from the paper.
+
+Each script has its input paths and distance targets at the top (defaults are Colab `/content/` paths). Output is one POSCAR per site and binding mode, plus a table of contact distances; rows marked `<-- check` have short contacts and should be inspected before running DFT. These are starting geometries to be relaxed in VASP. The ITO slab is from the SI of the paper cited above.
+
 ## Notes
 - Site-finding parameters (`--nn-cutoff`, `--hcp-thresh`, `--n-layers`,
   `--n-fixed-layers`) were tuned for a Co(111) 5-layer slab; check they
