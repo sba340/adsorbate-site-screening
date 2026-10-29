@@ -68,3 +68,6 @@ Local or cluster: `pip install ase numpy`, edit `SLAB_FILE`, `MOLECULES` and `OU
 - Developed with an Au(111) slab with 16 atoms per layer and a nearest-neighbor distance of 2.88 A. Check the layer detection and site geometry for other slabs.
 - Generated structures are starting guesses, not relaxed geometries. Run VASP relaxations before drawing conclusions about preferred modes.
 - Cleanup cells at the end of each part delete the output folder and zip. Run them only after downloading.
+### ITO_Au.ipynb
+
+Colab notebook with four workflows for placing molecules on surfaces and writing VASP POSCARs: phosphonic acids (F5BzPA, FBzPA) and thiols (PFBT, FBzS), each on Au(111) and on hydroxylated ITO(222). The same code is available as standalone scripts in `src/molecule_placement/`. See the main README for the binding modes and references.
