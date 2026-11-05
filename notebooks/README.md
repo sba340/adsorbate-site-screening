@@ -4,7 +4,78 @@
 |---|---|
 | `Adsorbate_placement_on_slab.ipynb` | Placement of small adsorbates (S, SH, SH2, SCH3, SHCH3 on Co(111)) at on-top, bridge, hcp and fcc sites, with a slab symmetry check before placement and a site analysis after DFT. The portable version lives in `src/`. |
 | `ITO_Au.ipynb` | Placement of phosphonic acid and thiol molecules on Au(111) and on hydroxylated ITO(222). Four workflows, each writing one POSCAR per binding mode, site and H treatment. |
+## Adsorbate_placement_on_slab.ipynb
 
+Builds starting geometries for VASP relaxations of one or more adsorbates on a clean metal slab, and analyzes the relaxed structures afterward. The defaults are set up for a five-layer Co(111) slab, but the site finder works for other HCP or FCC close-packed surfaces.
+
+The notebook has three stages:
+
+1. **Slab symmetry check.** Reads the relaxed bare slab and reports its space group and the number of symmetry operations (pymatgen, `symprec` 0.1 A). A high-symmetry result supports running VASP on one representative site per type. A low-symmetry result (for example P1) means the sites are not equivalent and more should be kept.
+2. **Adsorbate placement.** Writes one POSCAR per adsorbate and site type.
+3. **Post-DFT site analysis.** Compares a relaxed CONTCAR with its starting POSCAR and reports where the adsorbate ended up.
+
+### Inputs
+
+| File | Description |
+|---|---|
+| `CONTCAR_Co` | Relaxed bare slab |
+| `CONTCAR_<adsorbate>` | Relaxed gas-phase adsorbate, one file per species (for example `CONTCAR_SH2`). The label is taken from the file name. |
+| `POSCAR`, `CONTCAR` | Starting and relaxed structures of one adsorbate on the slab, used by the post-DFT analysis |
+
+### Placement method
+
+Sites are found from a Delaunay triangulation of the top-layer atoms, including periodic images. Layers are identified by clustering atoms on their z coordinate (KMeans). The sites are on-top, bridge, hollow_hcp and hollow_fcc. A hollow is labeled hcp if a second-layer atom lies below its centroid and fcc otherwise. One representative site per type is written.
+
+The binding atom is chosen automatically from `ANCHOR_PRIORITY` (S, O, N, C, H, first match wins), unless `ANCHOR_OVERRIDE` names a different element for that adsorbate. If several atoms of that element exist, the one with the lowest z in the input file is used. The molecule is rotated so that the anchor faces the surface and the rest of the molecule points away from it. This includes the case where the CONTCAR stores the tail pointing straight down (SH2), which is handled with an explicit 180 degree flip. The anchor is then placed at `HEIGHT` above the top layer, and the adsorbate is moved up in 0.1 A steps until no adsorbate to slab distance is below 1.0 A.
+
+| Setting | Default | Meaning |
+|---|---|---|
+| `SLAB_FILE` | `/content/CONTCAR_Co` | Clean slab |
+| `ADS_FILES` | S, SH, SH2, SHCH3, SCH3 | List of adsorbate CONTCARs |
+| `ANCHOR_PRIORITY` | S, O, N, C, H | Order in which the binding atom is chosen |
+| `ANCHOR_OVERRIDE` | empty | Per-adsorbate binding element, for example `"CO": "C"` |
+| `N_LAYERS` | 5 | Total layers in the slab |
+| `N_FIXED_LAYERS` | 2 | Bottom layers fixed with `FixAtoms` |
+| `HEIGHT` | 1.8 A | Height of the anchor above the mean z of the top layer |
+| `NN_CUTOFF` | 3.0 A | Maximum bond length for bridge and hollow detection |
+| `HCP_THRESH` | 0.75 A | Distance threshold for hcp versus fcc hollows |
+| `SEED` | 42 | KMeans random seed |
+| `OUT_ROOT` | `/content/adsorption_sites` | Output folder |
+
+### Output
+
+```
+adsorption_sites/<adsorbate>/<site>/POSCAR
+```
+
+where `<site>` is `ontop`, `bridge`, `hollow_hcp` or `hollow_fcc`. The output folder is zipped and downloaded at the end of the run when running in Colab.
+
+### Post-DFT site analysis
+
+Set `ads_label` and `site_label` to the adsorbate and the intended site, then run the last cell on a `POSCAR` and `CONTCAR` pair. It prints one dictionary with:
+
+| Key | Meaning |
+|---|---|
+| `final_site_by_coordination` | Site type from the number of metal atoms within `COORD_CUTOFF` of the anchor (1 ontop, 2 bridge, 3 or more hollow, classified as hcp or fcc) |
+| `site_moved` | True if the final site differs from the intended one (hcp and fcc both count as hollow) |
+| `height_above_surface` | Anchor height above the top metal layer |
+| `anchor_metal_dist` | Shortest anchor to metal distance |
+| `coordination_number` | Number of metal neighbors of the anchor |
+| `dissociated` | True if the bonding within the adsorbate changed between POSCAR and CONTCAR |
+| `desorbed` | True if no adsorbate atom has a slab neighbor within 1.5 times the natural bond cutoffs |
+
+Settings: `METAL_SYMBOL` (Co), `ANCHOR_SYMBOL` (S), `COORD_CUTOFF` (3.2 A) and `LAYER_TOL` (0.5 A). The metal atoms are assumed to come first in the file, followed by the adsorbate atoms.
+
+### Running
+
+Colab: the first cells install `ase`, `scikit-learn`, `scipy`, `numpy` and `pymatgen`. Upload the CONTCARs to `/content/` and run the cells in order. Run the cleaning cell before each new placement run. It deletes `/content/adsorption_sites` and everything in it.
+
+Local or cluster: `pip install ase scikit-learn scipy numpy pymatgen`, edit the paths in the settings block, and skip the Colab download step (the notebook skips it automatically outside Colab).
+
+### Notes
+
+- Only one site per type is written. This is appropriate when the symmetry check shows that all sites of a type are equivalent.
+- Generated structures are starting guesses, not relaxed geometries.
 ## ITO_Au.ipynb
 
 Builds starting geometries for VASP relaxations of F5BzPA and FBzPA (phosphonic acids) and PFBT and FBzS (thiols). The notebook contains four workflows:
