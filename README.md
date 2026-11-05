@@ -9,11 +9,6 @@ bridge, hollow_fcc, hollow_hcp) on a relaxed metal slab, placing an adsorbate
 on each, and screening the resulting VASP CONTCARs for dissociation,
 desorption, and site migration.
 
-Built for bimetallic/transition-metal catalyst adsorbate screening
-(e.g. S, SH, SH2, SCH3, SHCH3 on Co(111)), but the site-finding and
-placement logic is general to any close-packed metal slab + small-molecule
-adsorbate.
-
 ## How it works
 1. **Symmetry check** (`src/site_finder.py::check_slab_symmetry`) — confirms
    the clean, relaxed slab is symmetric enough that candidate sites of a
@@ -87,6 +82,14 @@ The Colab notebooks are in `notebooks/`. See `notebooks/README.md` for inputs, s
 
 - `Adsorbate_placement_on_slab.ipynb`: original Colab notebook this workflow was developed in (uses `/content/` paths and `google.colab.files.download`). It contains the slab symmetry check, the site placement, and the post-DFT site analysis. The `src/` scripts are the portable version of the same logic.
 - `ITO_Au.ipynb`: placement of phosphonic acid (F5BzPA, FBzPA) and thiol (PFBT, FBzS) molecules on Au(111) and on hydroxylated ITO(222). It enumerates binding modes, sites, tilts and H treatments and writes one VASP POSCAR for each. The portable versions are in `src/molecule_placement/`.
+
+## Adsorbate placement on Co(111)
+Built for bimetallic/transition-metal catalyst adsorbate screening
+(e.g. S, SH, SH2, SCH3, SHCH3 on Co(111)), but the site-finding and
+placement logic is general to any close-packed metal slab + small-molecule
+adsorbate.
+
+
 ## Molecule placement on Au(111) and ITO
 
 Separate from the site-enumeration workflow above, `src/molecule_placement/` builds VASP POSCARs for larger molecules in explicit binding modes: phosphonic acids (F5BzPA, FBzPA) and thiols (PFBT, FBzS) on Au(111) and on a hydroxylated ITO(222) slab. `notebooks/ITO_Au.ipynb` is the Colab notebook containing all four workflows.
