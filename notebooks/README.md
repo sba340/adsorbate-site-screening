@@ -2,7 +2,7 @@
 
 | Notebook | Purpose |
 |---|---|
-| `Adsorbate_placement_on_slab.ipynb` | Original Colab version of the site-enumeration and placement workflow (S, SH, SH2, SCH3, SHCH3 on Co(111)). The portable version lives in `src/`. |
+| `Adsorbate_placement_on_slab.ipynb` | Placement of small adsorbates (S, SH, SH2, SCH3, SHCH3 on Co(111)) at on-top, bridge, hcp and fcc sites, with a slab symmetry check before placement and a site analysis after DFT. The portable version lives in `src/`. |
 | `ITO_Au.ipynb` | Placement of phosphonic acid and thiol molecules on Au(111) and on hydroxylated ITO(222). Four workflows, each writing one POSCAR per binding mode, site and H treatment. |
 
 ## ITO_Au.ipynb
