@@ -66,10 +66,11 @@ python src/generate_sites.py \
     --anchor S --out-root examples/adsorption_sites
 ```
 
-## Notebook
-`notebooks/Adsorbate_placement_on_slab.ipynb`: original Colab notebook this workflow was developed in (uses `/content/` paths and `google.colab.files.download`). The `src/` scripts are the portable version of the same logic.
-`notebooks/SAM_placement_on_Au111.ipynb`: placement of phosphonic acid (F5BzPA, FBzPA) and thiol (PFBT, FBzS) anchoring groups on Au(111). Enumerates binding modes, sites, tilts and H treatments and writes one VASP POSCAR for each. See `notebooks/README.md` for inputs, settings and output naming.
+## Notebooks
+The Colab notebooks are in `notebooks/`. See `notebooks/README.md` for inputs, settings and output naming.
 
+- `Adsorbate_placement_on_slab.ipynb`: original Colab notebook this workflow was developed in (uses `/content/` paths and `google.colab.files.download`). It contains the slab symmetry check, the site placement, and the post-DFT site analysis. The `src/` scripts are the portable version of the same logic.
+- `ITO_Au.ipynb`: placement of phosphonic acid (F5BzPA, FBzPA) and thiol (PFBT, FBzS) molecules on Au(111) and on hydroxylated ITO(222). It enumerates binding modes, sites, tilts and H treatments and writes one VASP POSCAR for each. The portable versions are in `src/molecule_placement/`.
 ## Molecule placement on Au(111) and ITO
 
 Separate from the site-enumeration workflow above, `src/molecule_placement/` builds VASP POSCARs for larger molecules in explicit binding modes: phosphonic acids (F5BzPA, FBzPA) and thiols (PFBT, FBzS) on Au(111) and on a hydroxylated ITO(222) slab. `notebooks/ITO_Au.ipynb` is the Colab notebook containing all four workflows.
