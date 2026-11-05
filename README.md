@@ -1,4 +1,9 @@
 # adsorbate-site-screening
+This repository contains two separate workflows for building and checking VASP structures:
+
+1. **Adsorbate site screening** (`src/site_finder.py`, `src/placement.py`, `src/analysis.py`): enumerates symmetry-inequivalent sites on a metal slab, places small adsorbates (S, SH, SH2, SCH3, SHCH3 on Co(111)), and classifies the relaxed structures.
+2. **Molecule placement** (`src/molecule_placement/`): places phosphonic acids and thiols in explicit binding modes on Au(111) and hydroxylated ITO(222).
+
 Workflow for enumerating symmetry-inequivalent adsorption sites (ontop,
 bridge, hollow_fcc, hollow_hcp) on a relaxed metal slab, placing an adsorbate
 on each, and screening the resulting VASP CONTCARs for dissociation,
@@ -65,7 +70,18 @@ python src/generate_sites.py \
     --slab examples/CONTCAR_Co_example --ads examples/CONTCAR_SH2_example \
     --anchor S --out-root examples/adsorption_sites
 ```
-
+## Notes
+- Site-finding parameters (`--nn-cutoff`, `--hcp-thresh`, `--n-layers`,
+  `--n-fixed-layers`) were tuned for a Co(111) 5-layer slab; check they
+  make sense for other metals/facets/slab thicknesses.
+- `--anchor` must match exactly one atom of that element in the adsorbate
+  file, since orientation and site placement are both anchored on it.
+- `analyze_results.py` requires exactly one anchor atom in the final
+  CONTCAR and raises an error otherwise. This is intentional: more than
+  one matching atom usually means a dissociation fragment or a second
+  adsorbate landed in the cell, and silently picking one would give a
+  misleading result.
+  
 ## Notebooks
 The Colab notebooks are in `notebooks/`. See `notebooks/README.md` for inputs, settings and output naming.
 
@@ -86,14 +102,4 @@ Phosphonic acid binding modes follow Paramonov et al., Chem. Mater. 2008, 20, 51
 
 Each script has its input paths and distance targets at the top (defaults are Colab `/content/` paths). Output is one POSCAR per site and binding mode, plus a table of contact distances; rows marked `<-- check` have short contacts and should be inspected before running DFT. These are starting geometries to be relaxed in VASP. The ITO slab is from the SI of the paper cited above.
 
-## Notes
-- Site-finding parameters (`--nn-cutoff`, `--hcp-thresh`, `--n-layers`,
-  `--n-fixed-layers`) were tuned for a Co(111) 5-layer slab; check they
-  make sense for other metals/facets/slab thicknesses.
-- `--anchor` must match exactly one atom of that element in the adsorbate
-  file, since orientation and site placement are both anchored on it.
-- `analyze_results.py` requires exactly one anchor atom in the final
-  CONTCAR and raises an error otherwise. This is intentional: more than
-  one matching atom usually means a dissociation fragment or a second
-  adsorbate landed in the cell, and silently picking one would give a
-  misleading result.
+
